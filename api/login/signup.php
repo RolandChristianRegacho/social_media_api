@@ -6,34 +6,48 @@
     if(strtoupper($requestMethod) == post) {
         $request_body = file_get_contents('php://input');
         $data_array = json_decode($request_body);
-        $result = array();
+        $response = array();
+        $flag = false;
 
         $hashed_password = password_hash($data_array->password, PASSWORD_DEFAULT);
 
-		$query = "SELECT * FROM `accounts` where `username` = '".$data_array->username."'";
-		$database -> query($query);
+		$query = "SELECT * FROM `accounts` where `username` = ?";
+        $params = ["s", $data_array->email];
+        $result = SelectExecuteStatement($con, $query, $params);
 
-		if($database -> affected_rows > 0) {
-            $result = Array (
+		while($row = $result -> fetch_assoc()) {
+            $response = Array (
                 "type" => "error",
                 "text" => "Username already taken!"
             );
+            $flag = true;
+            break;
 		}
 
-        $query = "INSERT INTO `accounts`(`username`, `password`, `first_name`, `middle_name`, `last_name`, `email`, `birthday`, `date_created`) VALUES ('".$data_array -> username."','$hashed_password', '".$data_array -> firstname."', '".$data_array -> midname."', '".$data_array -> lastname."', '".$data_array -> email."', '".$data_array -> birthday."', NOW())";
-        if($database -> query($query)) {
-            $result = Array (
-                "type" => "success",
-                "text" => "Registered successfully!"
-            );
+        if(!$flag) {
+            $query = "INSERT INTO `accounts`(`username`, `password`, `first_name`, `middle_name`, `last_name`, `email`, `birthday`, `date_created`) VALUES ( ?, ?, ?, ?, ?, ?, ?, NOW())";
+            $params = ["sssssss", $data_array->email, $hashed_password, $data_array->first_name, $data_array->middle_name, $data_array->last_name, $data_array->email, $data_array->birthday];
+    
+            if(ExecuteStatement($con, $query, $params)) {
+                $response = Array (
+                    "type" => "success",
+                    "text" => "Registered successfully!"
+                );
+            }
+            else{
+
+                $response = Array (
+                    "type" => "error",
+                    "text" => "Server error!"
+                );
+            }
         }
 
-        $result = Array (
-            "type" => "error",
-            "text" => "Server error!"
-        );
+        output(json_encode($response), array('Content-Type: application/json', Ok()));
+    }
 
-        output(json_encode($result), array('Content-Type: application/json', Ok()));
+    else if(strtoupper($requestMethod) == get) {
+        output(json_encode(array("type" => "success")), array('Content-Type: application/json', Ok()));
     }
 
     else if(strtoupper($requestMethod) == options) {
