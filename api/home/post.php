@@ -116,6 +116,26 @@
     
             output(json_encode($result), array('Content-Type: application/json', Ok()));
         }
+        else if(isset($data->user_id) && isset($data->reply)) {
+            $result = array();
+            $query = "INSERT INTO `replies`(`post_id`, `sender`, `content`, `date`) VALUES (?, ?, ?, NOW())";
+            $params = ["sss", $data->reply->post_id, $data->user_id, $data->reply->content];
+    
+            if(ExecuteStatement($con, $query, $params)) {
+                $result = Array (
+                    "type" => "success",
+                    "text" => "Replied successfully!"
+                );
+            }
+            else {
+                $result = Array (
+                    "type" => "error",
+                    "text" => "Server error!"
+                );
+            }
+            
+            output(json_encode($result), array('Content-Type: application/json', Ok()));
+        }
         else {
             error("Page not found", NotFound());
         }
