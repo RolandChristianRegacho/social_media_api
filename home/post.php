@@ -144,4 +144,8 @@
     else if(strtoupper($requestMethod) == options) {
         output(json_encode(array("type" => "success")), array('Content-Type: application/json', Ok()));
     }
+
+    else {
+        error("Method not supported", NotAllowed());
+    }
 ?>
