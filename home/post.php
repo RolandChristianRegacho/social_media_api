@@ -31,10 +31,12 @@
                     else {
                         $users["profile_picture"] = getDefaultPic($database);
                     }
-        
+                    
                     $reply_query = "SELECT `id`, `post_id`, `sender`, `content`, `date` FROM `replies` where `post_id` = ? order by `date` desc";
                     $params = ["s", $row["id"]];
                     $result_reply = SelectExecuteStatement($con, $reply_query, $params);
+
+                    $reply = [];
         
                     while($rows = $result_reply -> fetch_assoc()) {
                         $flag = true;
