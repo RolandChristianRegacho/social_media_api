@@ -1,10 +1,11 @@
 <?php
+	require_once("../Constant.php");
 
 function SelectExecuteStatement($connection, $sql, $params = []) {
     $stmt = $connection->prepare($sql);
     
     if(!$stmt) {
-        error("Server Error", "HTTP/1.1 500 Internal Server Error");
+        error("Server Error", ServerError());
     }
     
     if(count($params) > 0) {
@@ -21,7 +22,7 @@ function ExecuteStatement($connection, $sql, $params = []) {
     $stmt = $connection->prepare($sql);
 
     if(!$stmt) {
-        error("Server Error", "HTTP/1.1 500 Internal Server Error");
+        error("Server Error", ServerError());
     }
     
     if(count($params) > 0) {

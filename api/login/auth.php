@@ -18,10 +18,6 @@ if(strtoupper($requestMethod) == post) {
         while($row = $result -> fetch_assoc()) {
             $flag = true;
             if (password_verify($data->password, $row["password"])){
-                $_SESSION["user"] = $row["id"];
-                $_SESSION["id"] = $row["username"];
-                $_SESSION["name"] = $row["first_name"]." ".$row["middle_name"]." ".$row["last_name"];
-    
                 $result = array(
                     "type" => "success",
                     "message" => "Login Succcess!",
@@ -34,31 +30,31 @@ if(strtoupper($requestMethod) == post) {
                 );
                 break;
             }
-
+            //wrong password
             $result = array(
                 "type" => "error",
-                "message" => "Wrong password. Try again or click Forgot password to reset it."
+                "message" => "Invalid Credentials!"
             );
             break;
         }
-        
+        //account does not exist
         if(!$flag) {
             $result = array(
                 "type" => "error",
-                "message" => "Account does not exist. Try again or signup an account!"
+                "message" => "Invalid Credentials!"
             );
         }
 
-        output(json_encode($result), array('Content-Type: application/json', "HTTP/1.1 200 OK"));
+        output(json_encode($result), array('Content-Type: application/json', Ok()));
     }
 
-    error("Page not found", "HTTP/1.1 404 Not Found");
+    error("Page not found", NotFound());
 }
 
 else if(strtoupper($requestMethod) == options) {
-    output(json_encode(array("type" => "success")), array('Content-Type: application/json', "HTTP/1.1 200 OK"));
+    output(json_encode(array("type" => "success")), array('Content-Type: application/json', Ok()));
 }
 
 else {
-    error("Method not supported", "HTTP/1.1 405 Method Not Allowed");
+    error("Method not supported", NotAllowed());
 }

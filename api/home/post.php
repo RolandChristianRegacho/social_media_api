@@ -9,7 +9,7 @@
             try {
                 $user = $_GET["id"];
         
-                $query = "SELECT * FROM `posts` where `user` = ? order by `date` desc";
+                $query = "SELECT `id`, `user`, `content`, `date` FROM `posts` where `user` = ? order by `date` desc";
                 $params = ["s", $user];
                 $result = SelectExecuteStatement($con, $query, $params);
                 //$result = $database -> query($query);
@@ -20,10 +20,10 @@
                     $flag = false;
                     $reply_count = 0;
         
-                    $user_query = "SELECT id, profile_picture, first_name, last_name FROM `accounts` where `id` = ?";
+                    $user_query = "SELECT `id`, `profile_picture`, `first_name`, `last_name` FROM `accounts` where `id` = ?";
                     $params = ["s", $user];
                     $results = SelectExecuteStatement($con, $user_query, $params);
-                    //$results = $database -> query($user_query);
+
                     $users = $results -> fetch_assoc();
                     if($users["profile_picture"] !== null) {
                         $users["profile_picture"] = 'data:image/jpeg;base64,'.base64_encode($users["profile_picture"]);
@@ -32,18 +32,17 @@
                         $users["profile_picture"] = getDefaultPic($database);
                     }
         
-                    $reply_query = "SELECT * FROM `replies` where `post_id` = ? order by `date` desc";
+                    $reply_query = "SELECT `id`, `post_id`, `sender`, `content`, `date` FROM `replies` where `post_id` = ? order by `date` desc";
                     $params = ["s", $row["id"]];
                     $result_reply = SelectExecuteStatement($con, $reply_query, $params);
-                    //$result_reply = $database -> query($reply_query);
         
                     while($rows = $result_reply -> fetch_assoc()) {
                         $flag = true;
                     
-                        $reply_sender = "SELECT * FROM `accounts` where `id` = ?";	
+                        $reply_sender = "SELECT `id`, `profile_picture`, `first_name`, `last_name` FROM `accounts` where `id` = ?";	
                         $params = ["s", $rows["sender"]];
                         $result_sender = SelectExecuteStatement($con, $reply_sender, $params);
-                        //$result_sender = $database -> query($reply_sender);
+
                         $sender = $result_sender -> fetch_assoc();
         
                         if($sender["profile_picture"] !== null) {
@@ -81,11 +80,14 @@
                     "post" => $posts
                 );
         
-                output(json_encode($posts), array('Content-Type: application/json', "HTTP/1.1 200 OK"));
+                output(json_encode($posts), array('Content-Type: application/json', Ok()));
             }
             catch(Exception $e) {
-                error($e, "HTTP/1.1 500 Internal Server Error");
+                error($e, ServerError());
             }
+        }
+        else {
+            error("Page not found", NotFound());
         }
     }
 
@@ -112,14 +114,14 @@
                 );
             }
     
-            output(json_encode($result), array('Content-Type: application/json', "HTTP/1.1 200 OK"));
+            output(json_encode($result), array('Content-Type: application/json', Ok()));
         }
         else {
-            error("Page not found", "HTTP/1.1 404 Not Found");
+            error("Page not found", NotFound());
         }
     }
 
     else if(strtoupper($requestMethod) == options) {
-        output(json_encode(array("type" => "success")), array('Content-Type: application/json', "HTTP/1.1 200 OK"));
+        output(json_encode(array("type" => "success")), array('Content-Type: application/json', Ok()));
     }
 ?>
