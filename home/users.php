@@ -16,6 +16,12 @@
             
             while($row = $result -> fetch_assoc()) {
                 $flag = true;
+                if($row["profile_picture"] !== null) {
+                    $row["profile_picture"] = 'data:image/jpeg;base64,'.base64_encode($row["profile_picture"]);
+                }
+                else {
+                    $row["profile_picture"] = getDefaultPic($con);
+                }
                 $response = array(
                     "type" => "found",
                     "data" => $row
