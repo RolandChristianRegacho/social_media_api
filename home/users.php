@@ -5,35 +5,39 @@
     $requestMethod = $_SERVER["REQUEST_METHOD"];
 
     if(strtoupper($requestMethod) == get) {
-        if(isset($_GET["search"])) {
+        if(isset($_GET["search"]) && isset($_GET["user_id"])) {
             $name = "%".$_GET["search"]."%";
             $sql = "SELECT `id`, `profile_picture`, `first_name`, `middle_name`, `last_name` FROM `accounts` WHERE first_name LIKE ? or middle_name LIKE ? or last_name LIKE ? ";
             $params = ["sss", $name, $name, $name];
-            $response = array();
+            $search_result = array();
+            $count = 0;
         
             $result = SelectExecuteStatement($con, $sql, $params);
-            $flag = false;
             
             while($row = $result -> fetch_assoc()) {
-                $flag = true;
                 if($row["profile_picture"] !== null) {
                     $row["profile_picture"] = 'data:image/jpeg;base64,'.base64_encode($row["profile_picture"]);
                 }
                 else {
                     $row["profile_picture"] = getDefaultPic($con);
                 }
-                $response = array(
-                    "type" => "found",
-                    "data" => $row
-                );
+
+                if($row["id"] != $_GET["user_id"]) {
+                    $search_result[$count] = $row;
+                }
+                $count++;
             }
 
-            if($flag) {
-                output(json_encode($response), array('Content-Type: application/json', Ok()));
-            }
-            else {
+            if(count($search_result) == 0) {
                 output(json_encode(array("type" => "not found")), array('Content-Type: application/json', Ok()));
             }
+
+            $response = array(
+                "type" => "found",
+                "data" => $search_result
+            );
+            
+            output(json_encode($response), array('Content-Type: application/json', Ok()));
         }
         else {
             error("Page not found", NotFound());
