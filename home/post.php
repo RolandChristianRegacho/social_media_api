@@ -9,7 +9,7 @@
             try {
                 $user = $_GET["id"];
         
-                $query = "SELECT `id`, `user`, `content`, `date` FROM `posts` where `user` = ? order by `date` desc";
+                $query = "SELECT `id`, `user`, `content`, `date` FROM `posts` where `user` = ? or `user` = '1' order by `date` desc";
                 $params = ["s", $user];
                 $result = SelectExecuteStatement($con, $query, $params);
                 //$result = $database -> query($query);
@@ -19,9 +19,10 @@
                 while($row = $result -> fetch_assoc()) {
                     $flag = false;
                     $reply_count = 0;
+                    $poster_id = $row["user"];
         
                     $user_query = "SELECT `id`, `profile_picture`, `first_name`, `last_name` FROM `accounts` where `id` = ?";
-                    $params = ["s", $user];
+                    $params = ["s", $poster_id];
                     $results = SelectExecuteStatement($con, $user_query, $params);
 
                     $users = $results -> fetch_assoc();
@@ -29,7 +30,7 @@
                         $users["profile_picture"] = 'data:image/jpeg;base64,'.base64_encode($users["profile_picture"]);
                     }
                     else {
-                        $users["profile_picture"] = getDefaultPic($database);
+                        $users["profile_picture"] = getDefaultPic($con);
                     }
                     
                     $reply_query = "SELECT `id`, `post_id`, `sender`, `content`, `date` FROM `replies` where `post_id` = ? order by `date` desc";
