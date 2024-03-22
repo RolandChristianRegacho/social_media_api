@@ -6,25 +6,34 @@
 
     if(strtoupper($requestMethod) == get) {
         if(isset($_GET["user_id"])) {
-            $sql = "SELECT n.id, n.sender, n.receiver, n.context, n.date, n.status, a.first_name FROM `notifications` n LEFT JOIN `accounts` a ON n.sender = a.id  WHERE `receiver` = ? ";
+            $sql = "SELECT n.id, n.sender, n.receiver, n.context, n.date, n.status, a.first_name FROM `notifications` n LEFT JOIN `accounts` a ON n.sender = a.id  WHERE `receiver` = ? ORDER BY `date` DESC";
             $params = ["s", $_GET["user_id"]];
         
             $result = SelectExecuteStatement($con, $sql, $params);
             $response = array();
             $notification_response = array();
             $count = 0;
+            $unread = 0;
             $flag = false;
             
             while($row = $result -> fetch_assoc()) {
                 $flag = true;
                 $response[$count] = $row;
+                if($row["status"] == 0) {
+                    $unread++;
+                    $row["status"] = true;
+                }
+                else {
+                    $row["status"] = false;
+                }
                 $count++;
             }
 
             if($flag) {
                 $notification_response = array(
                     "type" => "found",
-                    "data" => $response
+                    "data" => $response,
+                    "unread_count" => $unread
                 );
             }
             else {
@@ -66,6 +75,35 @@
             output(json_encode($result), array('Content-Type: application/json', Ok()));
         }
         
+        else {
+            error("Page not found", NotFound());
+        }
+    }
+
+    else if(strtoupper($requestMethod) == put) {
+        $request_body = file_get_contents('php://input');
+        $data = json_decode($request_body);
+
+        if(isset($data->user_id)) {
+            $result = array();
+
+            $query = "UPDATE `notifications` SET `status`='1' WHERE `receiver` = ?;";
+            $params = ["s", $data->user_id];
+
+            if(ExecuteStatement($con, $query, $params)) {
+                $result = array(
+                    "type" => "success"
+                );
+            }
+            else {
+                $result = array(
+                    "type" => "error"
+                );
+            }
+    
+            output(json_encode($result), array('Content-Type: application/json', "HTTP/1.1 200 OK"));
+        }
+
         else {
             error("Page not found", NotFound());
         }
