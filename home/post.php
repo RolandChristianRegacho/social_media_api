@@ -52,7 +52,7 @@
                             $sender["profile_picture"] = 'data:image/jpeg;base64,'.base64_encode($sender["profile_picture"]);
                         }
                         else {
-                            $sender["profile_picture"] = getDefaultPic($database);
+                            $sender["profile_picture"] = getDefaultPic($con);
                         }
         
                         $reply[$reply_count] = array(
@@ -129,6 +129,10 @@
                     "type" => "success",
                     "text" => "Replied successfully!"
                 );
+
+                notifyReply($con, $data->user_id, $data->reply->post_id);
+    
+                output(json_encode($result), array('Content-Type: application/json', Ok()));
             }
             else {
                 $result = Array (
