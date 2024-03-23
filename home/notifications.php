@@ -6,7 +6,7 @@
 
     if(strtoupper($requestMethod) == get) {
         if(isset($_GET["user_id"])) {
-            $sql = "SELECT n.id, n.sender, n.receiver, n.context, n.date, n.status, a.first_name FROM `notifications` n LEFT JOIN `accounts` a ON n.sender = a.id  WHERE `receiver` = ? ORDER BY `date` DESC";
+            $sql = "SELECT n.id, n.sender, n.receiver, n.context, n.date, n.status, a.first_name, n.post_id FROM `notifications` n LEFT JOIN `accounts` a ON n.sender = a.id  WHERE `receiver` = ? ORDER BY `date` DESC";
             $params = ["s", $_GET["user_id"]];
         
             $result = SelectExecuteStatement($con, $sql, $params);

@@ -15,9 +15,11 @@
 
         $row = $result -> fetch_assoc();
 
-        $query = "INSERT INTO `notifications`(`context`, `receiver`, `sender`, `date`) VALUES (?, ?, ?, NOW())";
-        $params = ["sss", "Reply", $row["user"], $sender];
-
-        ExecuteStatement($database, $query, $params);
+        if($row["user"] != $sender) {
+            $query = "INSERT INTO `notifications`(`context`, `receiver`, `sender`, `post_id`, `date`) VALUES (?, ?, ?, ?, NOW())";
+            $params = ["ssss", "Reply", $row["user"], $sender, $post_id];
+    
+            ExecuteStatement($database, $query, $params);
+        }
     }
 ?>
