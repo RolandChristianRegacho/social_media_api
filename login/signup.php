@@ -11,9 +11,8 @@
 
         $hashed_password = password_hash($data_array->password, PASSWORD_DEFAULT);
 
-		$query = "SELECT * FROM `accounts` where `username` = ?";
         $params = ["s", $data_array->email];
-        $result = SelectExecuteStatement($con, $query, $params);
+        $result = SelectExecuteStatement($con, getuserinformationquery, $params);
 
 		while($row = $result -> fetch_assoc()) {
             $response = Array (
@@ -25,10 +24,9 @@
 		}
 
         if(!$flag) {
-            $query = "INSERT INTO `accounts`(`username`, `password`, `first_name`, `middle_name`, `last_name`, `email`, `birthday`, `date_created`) VALUES ( ?, ?, ?, ?, ?, ?, ?, NOW())";
             $params = ["sssssss", $data_array->email, $hashed_password, $data_array->first_name, $data_array->middle_name, $data_array->last_name, $data_array->email, $data_array->birthday];
     
-            if(ExecuteStatement($con, $query, $params)) {
+            if(ExecuteStatement($con, signupquery, $params)) {
                 $response = Array (
                     "type" => "success",
                     "text" => "Registered successfully!"

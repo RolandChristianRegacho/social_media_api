@@ -7,12 +7,11 @@
     if(strtoupper($requestMethod) == get) {
         if(isset($_GET["search"]) && isset($_GET["user_id"])) {
             $name = "%".$_GET["search"]."%";
-            $sql = "SELECT `id`, `profile_picture`, `first_name`, `middle_name`, `last_name` FROM `accounts` WHERE first_name LIKE ? or middle_name LIKE ? or last_name LIKE ? ";
             $params = ["sss", $name, $name, $name];
             $search_result = array();
             $count = 0;
         
-            $result = SelectExecuteStatement($con, $sql, $params);
+            $result = SelectExecuteStatement($con, getuserinformationbysearchquery, $params);
             
             while($row = $result -> fetch_assoc()) {
                 if($row["profile_picture"] !== null) {

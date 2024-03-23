@@ -6,14 +6,13 @@
 
     if(strtoupper($requestMethod) == get) {
         if(isset($_GET["user_id"])) {
-            $sql = "SELECT n.id, n.sender, n.receiver, n.context, n.date, n.status, a.first_name, n.post_id FROM `notifications` n LEFT JOIN `accounts` a ON n.sender = a.id  WHERE `receiver` = ? ORDER BY `date` DESC";
             $params = ["s", $_GET["user_id"]];
         
-            $result = SelectExecuteStatement($con, $sql, $params);
+            $result = SelectExecuteStatement($con, getnotificationbyuserquery, $params);
             $response = array();
             $notification_response = array();
             $count = 0;
-            $unread = 0;
+            $unread = 0;    
             $flag = false;
             
             while($row = $result -> fetch_assoc()) {
@@ -56,10 +55,9 @@
         if(isset($data->sender) && isset($data->receiver) && isset($data->content)) {
             $result = array();
 
-            $query = "INSERT INTO `notifications`(`context`, `receiver`, `sender`, `date`) VALUES (?, ?, ?, NOW())";
-            $params = ["sss", $data->content, $data->receiver, $data->sender];
+            $params = ["ssss", $data->content, $data->receiver, $data->sender, null];
 
-            if(ExecuteStatement($con, $query, $params)) {
+            if(ExecuteStatement($con, createnotificationquery, $params)) {
                 $result = array(
                     "type" => "success",
                     "message" => "Sent successfully!"
@@ -87,10 +85,9 @@
         if(isset($data->user_id)) {
             $result = array();
 
-            $query = "UPDATE `notifications` SET `status`='1' WHERE `receiver` = ?;";
             $params = ["s", $data->user_id];
 
-            if(ExecuteStatement($con, $query, $params)) {
+            if(ExecuteStatement($con, readnotificationquery, $params)) {
                 $result = array(
                     "type" => "success"
                 );

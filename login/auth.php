@@ -9,10 +9,9 @@ if(strtoupper($requestMethod) == post) {
 
     //POST LOGIN
     if(isset($data->username) && isset($data->password)) {
-        $sql = "SELECT * FROM accounts WHERE username = ? ";
         $params = ["s", $data->username];
         
-        $result = SelectExecuteStatement($con, $sql, $params);
+        $result = SelectExecuteStatement($con, loginquery, $params);
         $flag = false;
         
         while($row = $result -> fetch_assoc()) {

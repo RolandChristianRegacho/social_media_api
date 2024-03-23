@@ -8,11 +8,9 @@
         if(isset($_GET["user_id"])) {
             try {
                 $user = $_GET["user_id"];
-        
-                $query = "SELECT `id`, `user`, `content`, `date` FROM `posts` where `user` = ? or `user` = '1' order by `date` desc";
+
                 $params = ["s", $user];
-                $result = SelectExecuteStatement($con, $query, $params);
-                //$result = $database -> query($query);
+                $result = SelectExecuteStatement($con, getpostbyuserquery, $params);
                 $count = 0;
                 $posts = array();
         
@@ -21,9 +19,8 @@
                     $reply_count = 0;
                     $poster_id = $row["user"];
         
-                    $user_query = "SELECT `id`, `profile_picture`, `first_name`, `last_name` FROM `accounts` where `id` = ?";
                     $params = ["s", $poster_id];
-                    $results = SelectExecuteStatement($con, $user_query, $params);
+                    $results = SelectExecuteStatement($con, getuserinformationquery, $params);
 
                     $users = $results -> fetch_assoc();
                     if($users["profile_picture"] !== null) {
@@ -33,18 +30,16 @@
                         $users["profile_picture"] = getDefaultPic($con);
                     }
                     
-                    $reply_query = "SELECT `id`, `post_id`, `sender`, `content`, `date` FROM `replies` where `post_id` = ? order by `date` desc";
                     $params = ["s", $row["id"]];
-                    $result_reply = SelectExecuteStatement($con, $reply_query, $params);
+                    $result_reply = SelectExecuteStatement($con, getreplybypostquery, $params);
 
                     $reply = [];
         
                     while($rows = $result_reply -> fetch_assoc()) {
                         $flag = true;
                     
-                        $reply_sender = "SELECT `id`, `profile_picture`, `first_name`, `last_name` FROM `accounts` where `id` = ?";	
                         $params = ["s", $rows["sender"]];
-                        $result_sender = SelectExecuteStatement($con, $reply_sender, $params);
+                        $result_sender = SelectExecuteStatement($con, getuserinformationquery, $params);
 
                         $sender = $result_sender -> fetch_assoc();
         
@@ -93,9 +88,8 @@
             try {
                 $post_id = $_GET["post_id"];
         
-                $query = "SELECT `id`, `user`, `content`, `date` FROM `posts` where `id` = ?";
                 $params = ["s", $post_id];
-                $result = SelectExecuteStatement($con, $query, $params);
+                $result = SelectExecuteStatement($con, getpostbyid, $params);
                 //$result = $database -> query($query);
                 $count = 0;
                 $posts = array();
@@ -105,9 +99,8 @@
                     $reply_count = 0;
                     $poster_id = $row["user"];
         
-                    $user_query = "SELECT `id`, `profile_picture`, `first_name`, `last_name` FROM `accounts` where `id` = ?";
                     $params = ["s", $poster_id];
-                    $results = SelectExecuteStatement($con, $user_query, $params);
+                    $results = SelectExecuteStatement($con, getuserinformationquery, $params);
 
                     $users = $results -> fetch_assoc();
                     if($users["profile_picture"] !== null) {
@@ -117,18 +110,16 @@
                         $users["profile_picture"] = getDefaultPic($con);
                     }
                     
-                    $reply_query = "SELECT `id`, `post_id`, `sender`, `content`, `date` FROM `replies` where `post_id` = ? order by `date` desc";
                     $params = ["s", $row["id"]];
-                    $result_reply = SelectExecuteStatement($con, $reply_query, $params);
+                    $result_reply = SelectExecuteStatement($con, getreplybypostquery, $params);
 
                     $reply = [];
         
                     while($rows = $result_reply -> fetch_assoc()) {
                         $flag = true;
                     
-                        $reply_sender = "SELECT `id`, `profile_picture`, `first_name`, `last_name` FROM `accounts` where `id` = ?";	
                         $params = ["s", $rows["sender"]];
-                        $result_sender = SelectExecuteStatement($con, $reply_sender, $params);
+                        $result_sender = SelectExecuteStatement($con, getuserinformationquery, $params);
 
                         $sender = $result_sender -> fetch_assoc();
         
@@ -185,10 +176,9 @@
         if(isset($data->user_id) && isset($data->content)) {
             $result = array();
 
-            $query = "INSERT INTO `posts`(`user`, `content`, `date`) VALUES (?, ?, NOW())";
             $params = ["ss", $data->user_id, $data->content];
     
-            if(ExecuteStatement($con, $query, $params)) {
+            if(ExecuteStatement($con, createpostquery, $params)) {
                 $result = array(
                     "type" => "success",
                     "message" => "Posted successfully!"
@@ -205,10 +195,9 @@
         }
         else if(isset($data->user_id) && isset($data->reply)) {
             $result = array();
-            $query = "INSERT INTO `replies`(`post_id`, `sender`, `content`, `date`) VALUES (?, ?, ?, NOW())";
             $params = ["sss", $data->reply->post_id, $data->user_id, $data->reply->content];
     
-            if(ExecuteStatement($con, $query, $params)) {
+            if(ExecuteStatement($con, createreplyquery, $params)) {
                 $result = Array (
                     "type" => "success",
                     "text" => "Replied successfully!"
