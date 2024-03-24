@@ -65,6 +65,42 @@
         }
     }
 
+    else if(strtoupper($requestMethod) == post) {
+        $request_body = file_get_contents('php://input');
+        $data = json_decode($request_body);
+
+        if(isset($data->sender) && isset($data->receiver) && isset($data->notification_id)) {
+            $response = array();
+            $params = ["s", $data->sender, $data->receiver];
+
+            if(ExecuteStatement($con, createfriendquery, $params)) {
+                if(deleteNotif($con, $data->notification_id)) {
+                    $response = array (
+                        "type" => "success",
+                        "message" => "Friend Accepted!"
+                    );
+                }
+                else {
+                    $response = array (
+                        "type" => "error",
+                        "message" => "Server Error!"
+                    );
+                }
+            }
+            else {
+                $response = array (
+                    "type" => "error",
+                    "message" => "Server Error!"
+                );
+            }
+
+            output(json_encode($response), array('Content-Type: application/json', Ok()));
+        }
+        else {
+            error("Page not found", NotFound());
+        }
+    }
+
     else if(strtoupper($requestMethod) == options) {
         output(json_encode(array("type" => "success")), array('Content-Type: application/json', Ok()));
     }

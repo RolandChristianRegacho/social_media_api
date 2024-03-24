@@ -221,6 +221,34 @@
         }
     }
 
+    else if(strtoupper($requestMethod) == delete) {
+        $request_body = file_get_contents('php://input');
+        $data = json_decode($request_body);
+
+        if(isset($data->post_id)) {
+            $result = array();
+            $params = ["s", $data->post_id];
+
+            if(ExecuteStatement($con, deletepostbyidquery, $params)) {
+                $result = Array (
+                    "type" => "success",
+                    "text" => "Deleted successfully!"
+                );
+            }
+            else {
+                $result = Array (
+                    "type" => "error",
+                    "text" => "Server error!"
+                );
+            }
+
+            output(json_encode($result), array('Content-Type: application/json', Ok()));
+        }
+        else {
+            error("Page not found", NotFound());
+        }
+    }
+
     else if(strtoupper($requestMethod) == options) {
         output(json_encode(array("type" => "success")), array('Content-Type: application/json', Ok()));
     }

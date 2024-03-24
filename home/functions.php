@@ -6,8 +6,6 @@
     }
 
     function notifyReply($database, $sender, $post_id) {
-        $result = array();
-
         $params = ["s", $post_id];
         $result = SelectExecuteStatement($database, getpostuser, $params);
 
@@ -18,5 +16,11 @@
     
             ExecuteStatement($database, createnotificationquery, $params);
         }
+    }
+
+    function deleteNotif($database, $notif_id) {
+        $params = ["s", $notif_id];
+
+        return ExecuteStatement($database, deletenotificationquery, $params);
     }
 ?>
