@@ -38,6 +38,28 @@
             
             output(json_encode($response), array('Content-Type: application/json', Ok()));
         }
+        if(isset($_GET["profile_id"])) {
+            $params = ["s", $_GET["profile_id"]];
+            $response = array();
+        
+            $result = SelectExecuteStatement($con, getuserinformationquery, $params);
+            
+            while($row = $result -> fetch_assoc()) {
+                if($row["profile_picture"] !== null) {
+                    $row["profile_picture"] = 'data:image/jpeg;base64,'.base64_encode($row["profile_picture"]);
+                }
+                else {
+                    $row["profile_picture"] = getDefaultPic($con);
+                }
+
+                $response = array(
+                    "type" => "found",
+                    "data" => $row
+                );
+            }
+            
+            output(json_encode($response), array('Content-Type: application/json', Ok()));
+        }
         else {
             error("Page not found", NotFound());
         }
