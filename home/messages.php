@@ -41,6 +41,34 @@
         }
     }
 
+    else if(strtoupper($requestMethod) == post) {
+        $request_body = file_get_contents('php://input');
+        $data = json_decode($request_body);
+
+        if(isset($data->sender_id) && isset($data->receiver_id) && isset($data->content)) {
+            $params = ["sss", $data->sender_id, $data->receiver_id, $data->content];
+            $response = array();
+
+            if(ExecuteStatement($con, createmessagequery, $params)) {
+                $response = array(
+                    "type" => "success",
+                    "data" => "Message sent!"
+                );
+            }
+            else {
+                $response = array(
+                    "type" => "error",
+                    "data" => "Server Error!"
+                );
+            }
+
+            output(json_encode($response), array('Content-Type: application/json', Ok()));
+        }
+        else {
+            error("Page not found", NotFound());
+        }
+    }
+
     else if(strtoupper($requestMethod) == options) {
         output(json_encode(array("type" => "success")), array('Content-Type: application/json', Ok()));
     }

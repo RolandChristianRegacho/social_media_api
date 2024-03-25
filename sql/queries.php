@@ -19,6 +19,7 @@ define("createpostquery", "INSERT INTO `posts`(`user`, `content`, `date`) VALUES
 define("createreplyquery", "INSERT INTO `replies`(`post_id`, `sender`, `content`, `date`) VALUES (?, ?, ?, NOW())");
 define("createnotificationquery", "INSERT INTO `notifications`(`context`, `receiver`, `sender`, `post_id`, `date`) VALUES (?, ?, ?, ?, NOW())");
 define("createfriendquery", "INSERT INTO `friend_list`(`user_1`, `user_2`, `date_time`) VALUES (?, ?, NOW())");
+define("createmessagequery", "INSERT INTO `messages` (`sender_id`, `receiver_id`, `content`, `date`) VALUES (?, ?, ?, NOW())");
 
 //update queries
 define("readnotificationquery", "UPDATE `notifications` SET `status`='1' WHERE `receiver` = ?");
