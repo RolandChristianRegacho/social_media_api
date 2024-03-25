@@ -12,6 +12,7 @@ define("getpostuser", "SELECT `user` FROM `posts` where `id` = ? and `status` = 
 define("getuserinformationbysearchquery", "SELECT `id`, `profile_picture`, `first_name`, `middle_name`, `last_name` FROM `accounts` WHERE first_name LIKE ? or middle_name LIKE ? or last_name LIKE ? ");
 define("getnotificationbyuserquery", "SELECT n.id, n.sender, n.receiver, n.context, n.date, n.status, a.first_name, n.post_id FROM `notifications` n LEFT JOIN `accounts` a ON n.sender = a.id  WHERE `receiver` = ? ORDER BY `date` DESC");
 define("getmessagebyuser", "SELECT `id`, `sender_id`, `receiver_id`, `content`, `date` FROM `messages` WHERE (`sender_id` = ? OR `sender_id` = ?) AND (`receiver_id` = ? OR `receiver_id` = ?)");
+define("getalluserexceptuserquery", "SELECT `id`, `profile_picture`, `first_name`, `middle_name`, `last_name` FROM `accounts` where `id` != ?");
 
 //insert queries
 define("signupquery", "INSERT INTO `accounts`(`username`, `password`, `first_name`, `middle_name`, `last_name`, `email`, `birthday`, `date_created`) VALUES ( ?, ?, ?, ?, ?, ?, ?, NOW())");
