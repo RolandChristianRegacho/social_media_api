@@ -36,6 +36,34 @@
 
             output(json_encode($response), array('Content-Type: application/json', Ok()));
         }
+        else if(isset($_GET["user_id"])) {
+            $response = array();
+            $unread = 0;
+            $flag = false;
+
+            $params = ["s", $_GET["user_id"]];
+
+            $result = SelectExecuteStatement($con, getunreadmessagecountquery, $params);
+
+            while($row = $result -> fetch_assoc()) {
+                $unread++;
+                $flag = true;
+            }
+
+            if($flag) {
+                $response = array(
+                    "type" => "found",
+                    "unread_count" => $unread
+                );
+            }
+            else {
+                $response = array(
+                    "type" => "not found"
+                );
+            }
+            
+            output(json_encode($response), array('Content-Type: application/json', Ok()));
+        }
         else {
             error("Page not found", NotFound());
         }

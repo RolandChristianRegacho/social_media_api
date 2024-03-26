@@ -55,9 +55,9 @@
         if(isset($data->sender) && isset($data->receiver) && isset($data->content)) {
             $result = array();
 
-            $params = ["ssss", $data->content, $data->receiver, $data->sender, null];
+            $params = ["sss", $data->content, $data->receiver, $data->sender];
 
-            if(ExecuteStatement($con, createnotificationquery, $params)) {
+            if(ExecuteStatement($con, createnotificationwithoutpostidquery, $params)) {
                 $result = array(
                     "type" => "success",
                     "message" => "Sent successfully!"
@@ -88,6 +88,34 @@
             $params = ["s", $data->user_id];
 
             if(ExecuteStatement($con, readnotificationquery, $params)) {
+                $result = array(
+                    "type" => "success"
+                );
+            }
+            else {
+                $result = array(
+                    "type" => "error"
+                );
+            }
+    
+            output(json_encode($result), array('Content-Type: application/json', "HTTP/1.1 200 OK"));
+        }
+
+        else {
+            error("Page not found", NotFound());
+        }
+    }
+
+    else if(strtoupper($requestMethod) == delete) {
+        $request_body = file_get_contents('php://input');
+        $data = json_decode($request_body);
+
+        if(isset($data->sender) && isset($data->receiver)) {
+            $result = array();
+
+            $params = ["ss", $data->receiver, $data->sender];
+
+            if(ExecuteStatement($con, deletefriendrequestquery, $params)) {
                 $result = array(
                     "type" => "success"
                 );

@@ -13,12 +13,17 @@ define("getuserinformationbysearchquery", "SELECT `id`, `profile_picture`, `firs
 define("getnotificationbyuserquery", "SELECT n.id, n.sender, n.receiver, n.context, n.date, n.status, a.first_name, n.post_id FROM `notifications` n LEFT JOIN `accounts` a ON n.sender = a.id  WHERE `receiver` = ? ORDER BY `date` DESC");
 define("getmessagebyuser", "SELECT `id`, `sender_id`, `receiver_id`, `content`, `date`, `timestamp` FROM `messages` WHERE (`sender_id` = ? OR `sender_id` = ?) AND (`receiver_id` = ? OR `receiver_id` = ?)");
 define("getalluserexceptuserquery", "SELECT `id`, `profile_picture`, `first_name`, `middle_name`, `last_name` FROM `accounts` where `id` != ?");
+define("getfriendsendertatusquery","SELECT `id` FROM `notifications` WHERE `receiver` = ? and `sender` = ? and `context` = 'Friend Request'");
+define("getfriendreceiverstatusquery","SELECT `id` FROM `notifications` WHERE `sender` = ? and `receiver` = ? and `context` = 'Friend Request'");
+define("getunreadmessagecountquery", "SELECT DISTINCT `sender_id` FROM `messages` WHERE `receiver_id` = ? and `status` = 0");
+define("getunreadmessagecountbyuserquery", "SELECT `id` FROM `messages` WHERE `sender_id` = ? and `receiver_id` = ? and `status` = 0");
 
 //insert queries
 define("signupquery", "INSERT INTO `accounts`(`username`, `password`, `first_name`, `middle_name`, `last_name`, `email`, `birthday`, `date_created`) VALUES ( ?, ?, ?, ?, ?, ?, ?, NOW())");
 define("createpostquery", "INSERT INTO `posts`(`user`, `content`, `date`) VALUES (?, ?, NOW())");
 define("createreplyquery", "INSERT INTO `replies`(`post_id`, `sender`, `content`, `date`) VALUES (?, ?, ?, NOW())");
 define("createnotificationquery", "INSERT INTO `notifications`(`context`, `receiver`, `sender`, `post_id`, `date`) VALUES (?, ?, ?, ?, NOW())");
+define("createnotificationwithoutpostidquery", "INSERT INTO `notifications`(`context`, `receiver`, `sender`, `date`) VALUES (?, ?, ?, NOW())");
 define("createfriendquery", "INSERT INTO `friend_list`(`user_1`, `user_2`, `date_time`) VALUES (?, ?, NOW())");
 define("createmessagequery", "INSERT INTO `messages` (`sender_id`, `receiver_id`, `content`, `timestamp`, `date`) VALUES (?, ?, ?, ?, NOW())");
 
@@ -28,3 +33,4 @@ define("readnotificationquery", "UPDATE `notifications` SET `status`='1' WHERE `
 //delete queries
 define("deletepostbyidquery", "UPDATE `posts` SET `status` = 0 WHERE `id` = ?");
 define("deletenotificationquery", "DELETE FROM `notifications` WHERE `id` = ?");
+define("deletefriendrequestquery", "DELETE FROM `notifications` WHERE `receiver` = ? AND `sender` = ? AND `context` = 'Friend Request'");

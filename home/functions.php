@@ -23,4 +23,21 @@
 
         return ExecuteStatement($database, deletenotificationquery, $params);
     }
+
+    function checkSelectStatementIfEmpty($result) {
+        while($row = $result -> fetch_assoc()) {
+            return false;
+        }
+
+        return true;
+    }
+
+    function countUnreadMessage($result) {
+        $count = 0;
+        while($row = $result -> fetch_assoc()) {
+            $count++;
+        }
+
+        return $count;
+    }
 ?>

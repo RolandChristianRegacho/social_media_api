@@ -21,6 +21,18 @@
                     $row["profile_picture"] = getDefaultPic($con);
                 }
 
+                $paramss = ["is", $row["id"], $_GET["user_id"]];
+
+                if(!checkSelectStatementIfEmpty(SelectExecuteStatement($con, getfriendsendertatusquery, $paramss))) {
+                    $row["request_type"] = "sender";
+                }
+                else if(!checkSelectStatementIfEmpty(SelectExecuteStatement($con, getfriendreceiverstatusquery, $paramss))) {
+                    $row["request_type"] = "receiver";
+                }
+                else {
+                    $row["request_type"] = null;
+                }
+
                 if($row["id"] != $_GET["user_id"]) {
                     $search_result[$count] = $row;
                 }
@@ -75,6 +87,10 @@
                 else {
                     $row["profile_picture"] = getDefaultPic($con);
                 }
+
+                $params = ["ss", $row["id"], $_GET["user_id"]];
+
+                $row["unread_count"] = countUnreadMessage(SelectExecuteStatement($con, getunreadmessagecountbyuserquery, $params));
 
                 $user_response[$count] = $row;
                 $count++;
