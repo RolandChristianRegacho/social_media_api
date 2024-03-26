@@ -46,7 +46,7 @@
         $data = json_decode($request_body);
 
         if(isset($data->sender_id) && isset($data->receiver_id) && isset($data->content)) {
-            $params = ["sss", $data->sender_id, $data->receiver_id, $data->content];
+            $params = ["ssss", $data->sender_id, $data->receiver_id, $data->content, time()];
             $response = array();
 
             if(ExecuteStatement($con, createmessagequery, $params)) {
