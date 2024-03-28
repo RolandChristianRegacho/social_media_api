@@ -88,7 +88,7 @@
             try {
                 $user = $_GET["user_id"];
 
-                $params = ["s", $user];
+                $params = ["sss", $user, $user, $user];
                 $result = SelectExecuteStatement($con, getpostfornewsfeedquery, $params);
                 $count = 0;
                 $posts = array();

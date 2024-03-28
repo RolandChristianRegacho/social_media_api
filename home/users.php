@@ -21,13 +21,17 @@
                     $row["profile_picture"] = getDefaultPic($con);
                 }
 
-                $paramss = ["is", $row["id"], $_GET["user_id"]];
+                $params_for_status = ["is", $row["id"], $_GET["user_id"]];
+                $params_for_friend_status = ["ssss", $row["id"], $_GET["user_id"], $row["id"], $_GET["user_id"]];
 
-                if(!checkSelectStatementIfEmpty(SelectExecuteStatement($con, getfriendsendertatusquery, $paramss))) {
+                if(!checkSelectStatementIfEmpty(SelectExecuteStatement($con, getfriendsendertatusquery, $params_for_status))) {
                     $row["request_type"] = "sender";
                 }
-                else if(!checkSelectStatementIfEmpty(SelectExecuteStatement($con, getfriendreceiverstatusquery, $paramss))) {
+                else if(!checkSelectStatementIfEmpty(SelectExecuteStatement($con, getfriendreceiverstatusquery, $params_for_status))) {
                     $row["request_type"] = "receiver";
+                }
+                else if(!checkSelectStatementIfEmpty(SelectExecuteStatement($con, getfriendstatusquery, $params_for_friend_status))) {
+                    $row["request_type"] = "friend";
                 }
                 else {
                     $row["request_type"] = null;
@@ -73,12 +77,12 @@
             output(json_encode($response), array('Content-Type: application/json', Ok()));
         }
         else if(isset($_GET["user_id"])) {
-            $params = ["s", $_GET["user_id"]];
+            $params = ["ss", $_GET["user_id"], $_GET["user_id"]];
             $response = array();
             $user_response = array();
             $count = 0;
         
-            $result = SelectExecuteStatement($con, getalluserexceptuserquery, $params);
+            $result = SelectExecuteStatement($con, getfriendlistquery, $params);
             
             while($row = $result -> fetch_assoc()) {
                 if($row["profile_picture"] !== null) {

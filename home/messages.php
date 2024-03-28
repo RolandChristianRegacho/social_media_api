@@ -4,7 +4,6 @@
     
     $requestMethod = $_SERVER["REQUEST_METHOD"];
 
-    
     if(strtoupper($requestMethod) == get) {
         if(isset($_GET["user_id"]) && isset($_GET["message_user_id"])) {
             $params = ["ssss", $_GET["user_id"], $_GET["message_user_id"], $_GET["user_id"], $_GET["message_user_id"]];
