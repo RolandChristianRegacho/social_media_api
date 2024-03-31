@@ -31,6 +31,7 @@ define("createmessagequery", "INSERT INTO `messages` (`sender_id`, `receiver_id`
 
 //update queries
 define("readnotificationquery", "UPDATE `notifications` SET `status`='1' WHERE `receiver` = ?");
+define("readmessagequery", "UPDATE `messages` SET `status` = '1' WHERE `sender_id` = ? AND `receiver_id` = ?");
 
 //delete queries
 define("deletepostbyidquery", "UPDATE `posts` SET `status` = 0 WHERE `id` = ?");
