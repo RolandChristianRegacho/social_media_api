@@ -22,7 +22,7 @@
                 }
 
                 $params_for_status = ["is", $row["id"], $_GET["user_id"]];
-                $params_for_friend_status = ["ssss", $row["id"], $_GET["user_id"], $row["id"], $_GET["user_id"]];
+                $params_for_friend_status = ["ss", $_GET["user_id"], $row["id"]];
 
                 if(!checkSelectStatementIfEmpty(SelectExecuteStatement($con, getfriendsendertatusquery, $params_for_status))) {
                     $row["request_type"] = "sender";
@@ -77,7 +77,7 @@
             output(json_encode($response), array('Content-Type: application/json', Ok()));
         }
         else if(isset($_GET["user_id"])) {
-            $params = ["ss", $_GET["user_id"], $_GET["user_id"]];
+            $params = ["s", $_GET["user_id"]];
             $response = array();
             $user_response = array();
             $count = 0;

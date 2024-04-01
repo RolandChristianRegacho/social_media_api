@@ -13,15 +13,19 @@
             $params = ["ss", $data->sender_id, $data->receiver_id];
 
             if(ExecuteStatement($con, createfriendquery, $params)) {
-                $result = SelectExecuteStatement($con, getnotificationidbysenderandreceiverquery, $params);
+                $params = ["ss", $data->receiver_id, $data->sender_id];
+    
+                if(ExecuteStatement($con, createfriendquery, $params)) {
+                    $result = SelectExecuteStatement($con, getnotificationidbysenderandreceiverquery, $params);
 
-                $row = $result -> fetch_assoc();
+                    $row = $result -> fetch_assoc();
 
-                if(deleteNotif($con, $row["id"])) {
-                    $response = array (
-                        "type" => "success",
-                        "message" => "Friend Accepted!"
-                    );
+                    if(deleteNotif($con, $row["id"])) {
+                        $response = array (
+                            "type" => "success",
+                            "message" => "Friend Accepted!"
+                        );
+                    }
                 }
                 else {
                     $response = array (
