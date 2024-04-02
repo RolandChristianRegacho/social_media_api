@@ -4,7 +4,7 @@
 define("loginquery", "SELECT `id`, `password`, `first_name`, `middle_name`, `last_name` FROM accounts WHERE username = ?");
 define("getuserinformationquery", "SELECT `id`, `profile_picture`, `first_name`, `middle_name`, `last_name` FROM `accounts` where `id` = ?");
 define("getdefaultpic", "SELECT * FROM `images` where `id` = '1'");
-define("getpostfornewsfeedquery", "SELECT p.id, p.user, p.content, p.date FROM `friend_list` f INNER JOIN `posts` p ON f.friends = p.user WHERE f.owner = ? OR p.user = ? ORDER BY `date` DESC");
+define("getpostfornewsfeedquery", "SELECT DISTINCT p.id, p.user, p.content, p.date FROM `friend_list` f INNER JOIN `posts` p ON f.friends = p.user WHERE f.owner = ? OR p.user = ? AND p.status = 1 ORDER BY `date` DESC");
 define("getpostbyuserquery", "SELECT `id`, `user`, `content`, `date` FROM `posts` where `user` = ? and `status` = '1' order by `date` desc");
 define("getreplybypostquery", "SELECT `id`, `post_id`, `sender`, `content`, `date` FROM `replies` where `post_id` = ? and `status` = '1' order by `date` desc");
 define("getpostbyid", "SELECT `id`, `user`, `content`, `date` FROM `posts` where `id` = ? and `status` = '1'");

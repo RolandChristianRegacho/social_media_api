@@ -4,8 +4,10 @@ function output($data, $http_headers = array()) {
     header_remove('Set-Cookie');
 
     header('Access-Control-Allow-Origin: *');
+    header('Access-Control-Request-Headers: authorization');
+    header("Access-Control-Allow-Credentials", "true");
     header('Access-Control-Allow-Methods: POST, GET, DELETE, PUT, PATCH, OPTIONS');
-    header('Access-Control-Allow-Headers: token, Content-Type');
+    header('Access-Control-Allow-Headers: authorization, Content-Type');
     header('Access-Control-Max-Age: 1728000');
 
     if (is_array($http_headers) && count($http_headers)) {

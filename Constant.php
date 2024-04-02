@@ -5,9 +5,14 @@ define("put", "PUT");
 define("delete", "DELETE");
 define("options", "OPTIONS");
 define("max_page_count", 10);
+define("TOKEN", "test123456");
 
 function Ok() {
     return "HTTP/1.1 200 OK";
+}
+
+function NotAuthorized() {
+    return "HTTP/1.1 401 Unauthorized";
 }
 
 function NotFound() {
