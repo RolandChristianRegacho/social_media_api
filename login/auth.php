@@ -26,7 +26,7 @@ if(password_verify(TOKEN, $token)) {
                 if (password_verify($data->password, $row["password"])){
                     $result = array(
                         "type" => "success",
-                        "message" => "Login Succcess!",
+                        "message" => "Login Success!",
                         "data" => array (
                             "id" => $row["id"],
                             "first_name" => $row["first_name"],
