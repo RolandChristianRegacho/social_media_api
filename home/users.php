@@ -84,11 +84,12 @@
                 output(json_encode($response), array('Content-Type: application/json', Ok()));
             }
             else if(isset($_GET["user_id"])) {
-                $params = ["s", $_GET["user_id"]];
-                $response = array();
+                $user_id = $_GET["user_id"];
+
+                $params = ["s", $user_id];
                 $user_response = array();
                 $count = 0;
-            
+                
                 $result = SelectExecuteStatement($con, getfriendlistquery, $params);
                 
                 while($row = $result -> fetch_assoc()) {
@@ -98,18 +99,30 @@
                     else {
                         $row["profile_picture"] = getDefaultPic($con);
                     }
-    
-                    $params = ["ss", $row["id"], $_GET["user_id"]];
-    
+                
+                    $params = ["ss", $row["id"], $user_id];
+                
                     $row["unread_count"] = countUnreadMessage(SelectExecuteStatement($con, getunreadmessagecountbyuserquery, $params));
-    
+                
                     $user_response[$count] = $row;
                     $count++;
                 }
-    
+                
+                $params = ["sss", $user_id, $user_id, $user_id];
+                
+                $format = SelectExecuteStatement($con, getfriendlistformatquery, $params);
+                $format_array = array();
+                $response_array = array();
+                
+                while($row = $format -> fetch_assoc()) {
+                    array_push($format_array, array("id" => $row['user_id']));
+                }
+                
+                $array = sortArrayByArray($format_array, $user_response);
+                
                 $response = array(
                     "type" => "found",
-                    "data" => $user_response
+                    "data" => $array
                 );
                 
                 output(json_encode($response), array('Content-Type: application/json', Ok()));

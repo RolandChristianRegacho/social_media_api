@@ -40,4 +40,25 @@
 
         return $count;
     }
+
+    function sortArrayByArray($array_to_sort, $array_format) {
+        $array = array();
+    
+        foreach($array_to_sort as $items) {
+            $counter = 0;
+            foreach($array_format as $item) {
+                if($items["id"] == $item["id"]) {
+                    array_push($array, $item);
+                    array_splice($array_format, $counter, 1);
+                }
+                $counter++;
+            }
+        }
+
+        foreach($array_format as $items) {
+            array_push($array, $items);
+        }
+    
+        return $array;
+    }
 ?>

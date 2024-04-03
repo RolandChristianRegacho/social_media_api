@@ -12,12 +12,13 @@ define("getpostuser", "SELECT `user` FROM `posts` where `id` = ? and `status` = 
 define("getuserinformationbysearchquery", "SELECT `id`, `profile_picture`, `first_name`, `middle_name`, `last_name` FROM `accounts` WHERE first_name LIKE ? or middle_name LIKE ? or last_name LIKE ? ");
 define("getnotificationbyuserquery", "SELECT n.id, n.sender, n.receiver, n.context, n.date, n.status, a.first_name, n.post_id FROM `notifications` n LEFT JOIN `accounts` a ON n.sender = a.id  WHERE `receiver` = ? ORDER BY `date` DESC");
 define("getmessagebyuser", "SELECT `id`, `sender_id`, `receiver_id`, `content`, `date`, `timestamp` FROM `messages` WHERE (`sender_id` = ? OR `sender_id` = ?) AND (`receiver_id` = ? OR `receiver_id` = ?)");
-define("getfriendlistquery", "SELECT a.id, a.profile_picture, a.first_name, a.middle_name, a.last_name FROM `friend_list` f LEFT JOIN `accounts` a ON f.friends = a.id WHERE f.owner = ?");
+define("getfriendlistquery", "SELECT distinct a.id, a.profile_picture, a.first_name, a.middle_name, a.last_name FROM `friend_list` f LEFT JOIN `accounts` a ON f.friends = a.id WHERE f.owner = ?");
+define("getfriendlistformatquery", "SELECT MAX(`id`) as `format_id`, IF (`sender_id` = ?, `receiver_id`, `sender_id`) AS `user_id` FROM `messages` WHERE `sender_id` = ? OR `receiver_id` = ? GROUP BY `user_id` ORDER BY `format_id` DESC");
 define("getfriendsendertatusquery","SELECT `id` FROM `notifications` WHERE `receiver` = ? and `sender` = ? and `context` = 'Friend Request'");
 define("getfriendreceiverstatusquery","SELECT `id` FROM `notifications` WHERE `sender` = ? and `receiver` = ? and `context` = 'Friend Request'");
 define("getunreadmessagecountquery", "SELECT DISTINCT `sender_id` FROM `messages` WHERE `receiver_id` = ? and `status` = 0");
 define("getunreadmessagecountbyuserquery", "SELECT `id` FROM `messages` WHERE `sender_id` = ? and `receiver_id` = ? and `status` = 0");
-define("getnotificationidbysenderandreceiverquery", "SELECT `id` FROM `notifications` WHERE `sender` = ? and `receiver` = ? and `context` = 'Friend Request'");
+define("getnotificationidbysenderandreceiverquery", "SELECT `id` FROM `notifications` WHERE `receiver` = ? and `sender` = ? and `context` = 'Friend Request'");
 define("getfriendstatusquery", "SELECT `id` FROM `friend_list` WHERE `owner` = ? AND `friends` = ?");
 
 //insert queries

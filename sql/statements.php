@@ -1,5 +1,4 @@
 <?php
-	require_once("../Constant.php");
 
 function SelectExecuteStatement($connection, $sql, $params = []) {
     try {
