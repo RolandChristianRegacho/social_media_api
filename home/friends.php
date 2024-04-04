@@ -59,4 +59,7 @@
             error("Method not supported", NotAllowed());
         }
     }
+    else {
+        error("Method not supported", NotAuthorized());
+    }
 ?>

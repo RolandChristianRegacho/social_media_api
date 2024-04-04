@@ -62,5 +62,5 @@ if(password_verify(TOKEN, $token)) {
     }
 }
 else {
-    output(json_encode(array("type" => "hello?")), array('Content-Type: application/json', NotAuthorized()));
+    error("Method not supported", NotAllowed());
 }
