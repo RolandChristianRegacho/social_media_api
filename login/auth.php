@@ -62,5 +62,5 @@ if(password_verify(TOKEN, $token)) {
     }
 }
 else {
-    error("Method not supported", NotAllowed());
+    error("Invalid Credentials", NotAuthorized());
 }

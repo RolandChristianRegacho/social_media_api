@@ -146,6 +146,6 @@
         }
     }
     else {
-        error("Method not supported", NotAllowed());
+        error("Invalid Credentials", NotAuthorized());
     }
 ?>
