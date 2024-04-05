@@ -107,6 +107,12 @@
                         $reply_count = 0;
                         $poster_id = $row["user"];
             
+                        $params = ["s", $row["id"]];
+                        $result_for_image = SelectExecuteStatement($con, getpostimagefornewsfeedquery, $params);
+
+                        $post_image = $result_for_image -> fetch_assoc();
+                        $row["image"] = 'data:image/jpeg;base64,'.base64_encode($post_image["image"]);
+            
                         $params = ["s", $poster_id];
                         $results = SelectExecuteStatement($con, getuserinformationquery, $params);
     
@@ -269,7 +275,28 @@
             $request_body = file_get_contents('php://input');
             $data = json_decode($request_body);
     
-            if(isset($data->user_id) && isset($data->content)) {
+            if(isset($data->user_id) && isset($data->content) && isset($data->image_file)) {
+                $result = array();
+                $decoded_image = base64_decode($data->image_file);
+    
+                $params = ["sss", $data->user_id, $data->content, $decoded_image];
+        
+                if(ExecuteStatement($con, createpostwithimagequery, $params)) {
+                    $result = array(
+                        "type" => "success",
+                        "message" => "Posted successfully!"
+                    );
+                }
+                else {
+                    $result = array(
+                        "type" => "error",
+                        "message" => "An error occured while posting!"
+                    );
+                }
+        
+                output(json_encode($result), array('Content-Type: application/json', Ok()));
+            }
+            else if(isset($data->user_id) && isset($data->content)) {
                 $result = array();
     
                 $params = ["ss", $data->user_id, $data->content];
