@@ -26,6 +26,18 @@
                         $reply_count = 0;
                         $poster_id = $row["user"];
             
+                        $params = ["s", $row["id"]];
+                        $result_for_image = SelectExecuteStatement($con, getpostimagefornewsfeedquery, $params);
+
+                        $post_image = $result_for_image -> fetch_assoc();
+
+                        if($post_image["image"] != null) {
+                            $row["image"] = 'data:'.$post_image["image_type"].';base64,'.base64_encode($post_image["image"]);
+                        }
+                        else {
+                            $row["image"] = null;
+                        }
+            
                         $params = ["s", $poster_id];
                         $results = SelectExecuteStatement($con, getuserinformationquery, $params);
     
@@ -111,7 +123,13 @@
                         $result_for_image = SelectExecuteStatement($con, getpostimagefornewsfeedquery, $params);
 
                         $post_image = $result_for_image -> fetch_assoc();
-                        $row["image"] = 'data:image/jpeg;base64,'.base64_encode($post_image["image"]);
+
+                        if($post_image["image"] != null) {
+                            $row["image"] = 'data:'.$post_image["image_type"].';base64,'.base64_encode($post_image["image"]);
+                        }
+                        else {
+                            $row["image"] = null;
+                        }
             
                         $params = ["s", $poster_id];
                         $results = SelectExecuteStatement($con, getuserinformationquery, $params);
@@ -200,6 +218,18 @@
                         $flag = false;
                         $reply_count = 0;
                         $poster_id = $row["user"];
+            
+                        $params = ["s", $row["id"]];
+                        $result_for_image = SelectExecuteStatement($con, getpostimagefornewsfeedquery, $params);
+
+                        $post_image = $result_for_image -> fetch_assoc();
+
+                        if($post_image["image"] != null) {
+                            $row["image"] = 'data:'.$post_image["image_type"].';base64,'.base64_encode($post_image["image"]);
+                        }
+                        else {
+                            $row["image"] = null;
+                        }
             
                         $params = ["s", $poster_id];
                         $results = SelectExecuteStatement($con, getuserinformationquery, $params);
