@@ -168,6 +168,34 @@
             }
         }
     
+        else if(strtoupper($requestMethod) == put) {
+            $request_body = file_get_contents('php://input');
+            $data = json_decode($request_body);
+    
+            if(isset($data->user_id)) {
+                $response = array();
+                $params = ["ssssi", $data->first_name, $data->middle_name, $data->last_name, $data->birthday, $data->user_id];
+    
+                if(ExecuteStatement($con, updateprofilequery, $params)) {
+                    $response = array(
+                        "type" => "success",
+                        "message" => "Updated successfully!"
+                    );
+                }
+                else {
+                    $response = array(
+                        "type" => "error",
+                        "message" => "An error occured while updating!"
+                    );
+                }
+    
+                output(json_encode($response), array('Content-Type: application/json', Ok()));
+            }
+            else {
+                error("Page not found", NotFound());
+            }
+        }
+    
         else {
             error("Method not supported", NotAllowed());
         }

@@ -2,7 +2,7 @@
 
 //select queries
 define("loginquery", "SELECT `id`, `password`, `first_name`, `middle_name`, `last_name` FROM accounts WHERE username = ?");
-define("getuserinformationquery", "SELECT `id`, `profile_picture`, `first_name`, `middle_name`, `last_name` FROM `accounts` where `id` = ?");
+define("getuserinformationquery", "SELECT `id`, `profile_picture`, `first_name`, `middle_name`, `last_name`, `birthday` FROM `accounts` where `id` = ?");
 define("getdefaultpic", "SELECT * FROM `images` where `id` = '1'");
 define("getpostfornewsfeedquery", "SELECT DISTINCT p.id, p.user, p.content, p.date FROM `friend_list` f INNER JOIN `posts` p ON f.friends = p.user WHERE f.owner = ? OR p.user = ? AND p.status = 1 ORDER BY `date` DESC");
 define("getpostimagefornewsfeedquery", "SELECT `image`, `image_type` FROM `posts` WHERE `id` = ?");
@@ -35,6 +35,8 @@ define("createmessagequery", "INSERT INTO `messages` (`sender_id`, `receiver_id`
 //update queries
 define("readnotificationquery", "UPDATE `notifications` SET `status`='1' WHERE `receiver` = ?");
 define("readmessagequery", "UPDATE `messages` SET `status` = '1' WHERE `sender_id` = ? AND `receiver_id` = ?");
+define("updateprofilequery", "UPDATE `accounts` SET `first_name` = ?, `middle_name` = ?, `last_name` = ?, `birthday` = ? WHERE `id` = ?");
+define("updateprofilewithprofilepicturequery", "UPDATE `accounts` SET `first_name` = ?, `middle_name` = ?, `last_name` = ?, `profile_picture` = ?, `image_type` = ?, `birthday` = ? WHERE `id` = ?");
 
 //delete queries
 define("deletepostbyidquery", "UPDATE `posts` SET `status` = 0 WHERE `id` = ?");
