@@ -138,7 +138,7 @@
     
             if(isset($data->sender) && isset($data->receiver) && isset($data->notification_id)) {
                 $response = array();
-                $params = ["s", $data->sender, $data->receiver];
+                $params = ["ss", $data->sender, $data->receiver];
     
                 if(ExecuteStatement($con, createfriendquery, $params)) {
                     if(deleteNotif($con, $data->notification_id)) {

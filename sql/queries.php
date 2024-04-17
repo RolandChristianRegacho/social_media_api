@@ -2,13 +2,14 @@
 
 //select queries
 define("loginquery", "SELECT `id`, `password`, `first_name`, `middle_name`, `last_name` FROM accounts WHERE username = ?");
-define("getuserinformationquery", "SELECT `id`, `profile_picture`, `first_name`, `middle_name`, `last_name`, `birthday` FROM `accounts` where `id` = ?");
-define("getdefaultpic", "SELECT * FROM `images` where `id` = '1'");
+define("getuserinformationquery", "SELECT `id`, `profile_picture`, `first_name`, `middle_name`, `last_name`, `birthday` FROM `accounts` WHERE `id` = ?");
+define("getdefaultpic", "SELECT * FROM `images` WHERE `id` = '1'");
+define("getcolorthemequery", "SELECT `color_theme` FROM `accounts` WHERE `id` = ?");
 define("getpostfornewsfeedquery", "SELECT DISTINCT p.id, p.user, p.content, p.date FROM `friend_list` f INNER JOIN `posts` p ON f.friends = p.user WHERE f.owner = ? OR p.user = ? AND p.status = 1 ORDER BY `date` DESC");
 define("getpostimagefornewsfeedquery", "SELECT `image`, `image_type` FROM `posts` WHERE `id` = ?");
 define("getpostbyuserquery", "SELECT `id`, `user`, `content`, `image`, `date` FROM `posts` where `user` = ? and `status` = '1' order by `date` desc");
-define("getreplybypostquery", "SELECT `id`, `post_id`, `sender`, `content`, `date` FROM `replies` where `post_id` = ? and `status` = '1' order by `date` desc");
-define("getpostbyid", "SELECT `id`, `user`, `content`, `image`, `date` FROM `posts` where `id` = ? and `status` = '1'");
+define("getreplybypostquery", "SELECT `id`, `post_id`, `sender`, `content`, `date` FROM `replies` WHERE `post_id` = ? and `status` = '1' order by `date` desc");
+define("getpostbyid", "SELECT `id`, `user`, `content`, `image`, `date` FROM `posts` WHERE `id` = ? and `status` = '1'");
 define("getpostuser", "SELECT `user` FROM `posts` where `id` = ? and `status` = '1'");
 define("getuserinformationbysearchquery", "SELECT `id`, `profile_picture`, `first_name`, `middle_name`, `last_name` FROM `accounts` WHERE first_name LIKE ? or middle_name LIKE ? or last_name LIKE ? ");
 define("getnotificationbyuserquery", "SELECT n.id, n.sender, n.receiver, n.context, n.date, n.status, a.first_name, n.post_id FROM `notifications` n LEFT JOIN `accounts` a ON n.sender = a.id  WHERE `receiver` = ? ORDER BY `date` DESC");
@@ -37,6 +38,7 @@ define("readnotificationquery", "UPDATE `notifications` SET `status`='1' WHERE `
 define("readmessagequery", "UPDATE `messages` SET `status` = '1' WHERE `sender_id` = ? AND `receiver_id` = ?");
 define("updateprofilequery", "UPDATE `accounts` SET `first_name` = ?, `middle_name` = ?, `last_name` = ?, `birthday` = ? WHERE `id` = ?");
 define("updateprofilewithprofilepicturequery", "UPDATE `accounts` SET `first_name` = ?, `middle_name` = ?, `last_name` = ?, `profile_picture` = ?, `image_type` = ?, `birthday` = ? WHERE `id` = ?");
+define("updatecolorthemequery", "UPDATE `accounts` SET `color_theme` = ? WHERE `id` = ?");
 
 //delete queries
 define("deletepostbyidquery", "UPDATE `posts` SET `status` = 0 WHERE `id` = ?");
