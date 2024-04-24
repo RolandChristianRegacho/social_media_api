@@ -296,6 +296,42 @@
                     error($e, ServerError());
                 }
             }
+            else if(isset($_GET["edit_id"])) {
+                try {
+                    $post_id = $_GET["edit_id"];
+            
+                    $params = ["s", $post_id];
+                    $result = SelectExecuteStatement($con, getpostbyid, $params);
+                    //$result = $database -> query($query);
+                    $count = 0;
+                    $posts = "";
+            
+                    while($row = $result -> fetch_assoc()) {
+            
+                        $params = ["s", $row["id"]];
+                        $result_for_image = SelectExecuteStatement($con, getpostimagefornewsfeedquery, $params);
+
+                        $post_image = $result_for_image -> fetch_assoc();
+
+                        if($post_image["image"] != null) {
+                            $row["image"] = 'data:'.$post_image["image_type"].';base64,'.base64_encode($post_image["image"]);
+                        }
+                        else {
+                            $row["image"] = null;
+                        }
+
+                        $posts = array(
+                            "type" => "success",
+                            "post" => $row,
+                        );
+                    }
+            
+                    output(json_encode($posts), array('Content-Type: application/json', Ok()));
+                }
+                catch(Exception $e) {
+                    error($e, ServerError());
+                }
+            }
             else {
                 error("Page not found", NotFound());
             }
