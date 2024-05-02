@@ -438,6 +438,34 @@
             }
         }
     
+        else if(strtoupper($requestMethod) == put) {
+            $request_body = file_get_contents('php://input');
+            $data = json_decode($request_body);
+    
+            if(isset($data->post_id) && isset($data->content)) {
+                $result = array();
+                $params = ["ss", $data->content, $data->post_id];
+    
+                if(ExecuteStatement($con, editpostquery, $params)) {
+                    $result = Array (
+                        "type" => "success",
+                        "text" => "Updated successfully!"
+                    );
+                }
+                else {
+                    $result = Array (
+                        "type" => "error",
+                        "text" => "Server error!"
+                    );
+                }
+    
+                output(json_encode($result), array('Content-Type: application/json', Ok()));
+            }
+            else {
+                error("Page not found", NotFound());
+            }
+        }
+    
         else {
             error("Method not supported", NotAllowed());
         }

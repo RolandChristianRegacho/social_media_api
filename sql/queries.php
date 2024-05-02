@@ -39,6 +39,8 @@ define("readmessagequery", "UPDATE `messages` SET `status` = '1' WHERE `sender_i
 define("updateprofilequery", "UPDATE `accounts` SET `first_name` = ?, `middle_name` = ?, `last_name` = ?, `birthday` = ? WHERE `id` = ?");
 define("updateprofilewithprofilepicturequery", "UPDATE `accounts` SET `first_name` = ?, `middle_name` = ?, `last_name` = ?, `profile_picture` = ?, `image_type` = ?, `birthday` = ? WHERE `id` = ?");
 define("updatecolorthemequery", "UPDATE `accounts` SET `color_theme` = ? WHERE `id` = ?");
+define("editpostquery", "UPDATE `posts` SET `content` = ? WHERE `id` = ?");
+define("editpostwithimagequery", "UPDATE `posts` SET `content` = ?, `image` = ? WHERE `id` = ?");
 
 //delete queries
 define("deletepostbyidquery", "UPDATE `posts` SET `status` = 0 WHERE `id` = ?");
