@@ -76,19 +76,11 @@
                             $reply_count++;
                         }
     
-                        if($flag) {
-                            $posts[$count] = array(
-                                "user" => $users,
-                                "posts" => $row,
-                                "reply" => $reply
-                            );
-                        }
-                        else {
-                            $posts[$count] = array(
-                                "user" => $users,
-                                "posts" => $row
-                            );
-                        }
+                        $posts[$count] = array(
+                            "user" => $users,
+                            "posts" => $row,
+                            "reply" => $reply
+                        );
                         $count++;
                     }
     
@@ -169,19 +161,11 @@
                             $reply_count++;
                         }
     
-                        if($flag) {
-                            $posts[$count] = array(
-                                "user" => $users,
-                                "posts" => $row,
-                                "reply" => $reply
-                            );
-                        }
-                        else {
-                            $posts[$count] = array(
-                                "user" => $users,
-                                "posts" => $row
-                            );
-                        }
+                        $posts[$count] = array(
+                            "user" => $users,
+                            "posts" => $row,
+                            "reply" => $reply
+                        );
                         $count++;
                     }
     
@@ -269,19 +253,11 @@
                             $reply_count++;
                         }
     
-                        if($flag) {
-                            $posts[$count] = array(
-                                "user" => $users,
-                                "posts" => $row,
-                                "reply" => $reply
-                            );
-                        }
-                        else {
-                            $posts[$count] = array(
-                                "user" => $users,
-                                "posts" => $row
-                            );
-                        }
+                        $posts[$count] = array(
+                            "user" => $users,
+                            "posts" => $row,
+                            "reply" => $reply
+                        );
                         $count++;
                     }
     
